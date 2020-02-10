@@ -2,6 +2,7 @@ package com.example.stree_t_light;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.graphics.Camera;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,6 +30,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng cmrit = new LatLng(12.96, 77.7141);
         mMap.addMarker(new MarkerOptions().position(cmrit).title("Marker in Cmrit"));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cmrit));
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     }
 }

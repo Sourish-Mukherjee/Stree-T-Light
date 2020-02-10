@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void help_Function(View view)
     {
-        Toast.makeText(getApplicationContext(),"Gand Mara Help Nahi Karunga!",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Loading!!",Toast.LENGTH_LONG).show();
         startActivity(new Intent(this,MapsActivity.class));
     }
     @Override
