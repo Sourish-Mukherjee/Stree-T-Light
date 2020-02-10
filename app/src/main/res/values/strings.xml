@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Stree-T-Light</string>
+    <string name="help">HELP!</string>
+    <string name="PoliceStation">Nearest Police Station</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
