@@ -26,6 +26,7 @@ public class Register_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_);
+        final LoadingDialog loadingDialog = new LoadingDialog(Register_Activity.this);
         name = findViewById(R.id.Name_Edit_Text);
         ycont = findViewById(R.id.Your_Contact_Number);
         emercont = findViewById(R.id.Emergency_Contact_Number);
@@ -38,6 +39,7 @@ public class Register_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (check()) {
+                    loadingDialog.startLoadingDialog();
                     if (pass.getText().toString().equals(repass.getText().toString()) == true) {
                         firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString()).addOnCompleteListener(Register_Activity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -46,22 +48,29 @@ public class Register_Activity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(),
                                             "Login unsuccessful: " + task.getException().getMessage(),
                                             Toast.LENGTH_SHORT).show();
+                                    loadingDialog.dismissDialog();
                                 } else {
                                     firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(getApplicationContext(), "Account Created, Please Verify Your Email!!", Toast.LENGTH_SHORT).show();
+                                                loadingDialog.dismissDialog();
                                                 finish();
-                                            } else
+                                            } else {
                                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                loadingDialog.dismissDialog();
+                                            }
                                         }
                                     });
                                 }
                             }
                         });
-                    } else
+                    } else {
                         Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_SHORT).show();
+                        loadingDialog.dismissDialog();
+                    }
+
                 }
             }
 

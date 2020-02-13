@@ -35,6 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private TextView currlocationtV;
+    int PROXIMITY_RADIUS = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                   // Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.map);
                     mapFragment.getMapAsync(MapsActivity.this);
@@ -66,6 +67,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        String police = "police";
+        String url = getUrl(currentLocation.getLatitude(), currentLocation.getLongitude(), police);
+        Object dataTransfer[] = new Object[2];
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        getNearbyPlacesData.execute(dataTransfer);
+        Toast.makeText(getApplicationContext(), "NearByPolice Stations", Toast.LENGTH_SHORT).show();
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
@@ -76,15 +85,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
             List<Address> addresses = geo.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
             if (addresses.isEmpty()) {
-                currlocationtV.setText( "Waiting for Location");
+                currlocationtV.setText("Waiting for Location");
             } else {
                 if (addresses.size() > 0) {
-                    currlocationtV.setText("Current Location : "+addresses.get(0).getFeatureName()+","+addresses.get(0).getSubLocality() + ", " +
-                            addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea()+","+addresses.get(0).getPostalCode());
-            }
+                    currlocationtV.setText("Current Location : " + addresses.get(0).getFeatureName() + "," + addresses.get(0).getSubLocality() + ", " +
+                            addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + "," + addresses.get(0).getPostalCode());
+                }
             }
         } catch (Exception e) {
             return;
         }
+    }
+
+    private String getUrl(double latitutde, double longitutde, String nearbyPlace) {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location=" + latitutde + "," + longitutde);
+        googlePlaceUrl.append("&radius=" + 3000);
+        googlePlaceUrl.append("&types=" + "police");
+        googlePlaceUrl.append("&key=" + "AIzaSyAVrN518B3uBO72_SvBq8yhKmdyi2r-DoI");
+        return googlePlaceUrl.toString();
+
     }
 }

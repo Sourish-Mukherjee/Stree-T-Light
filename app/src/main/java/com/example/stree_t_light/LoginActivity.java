@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        final LoadingDialog loadingDialog = new LoadingDialog(LoginActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
         email = findViewById(R.id.Email_ID_Edit_Text_Login);
         password = findViewById(R.id.Password_Edit_Text_Login);
@@ -58,18 +60,26 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (check()) {
+                    loadingDialog.startLoadingDialog();
                     firebaseAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful())
+                            if (!task.isSuccessful()) {
                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                loadingDialog.dismissDialog();
+                            }
                             else {
 
-                                if (firebaseAuth.getCurrentUser().isEmailVerified())
+                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {
                                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                else
+                                    loadingDialog.dismissDialog();
+                                }
+                                else {
                                     Toast.makeText(getApplicationContext(), "Email Address Not Verified!", Toast.LENGTH_SHORT).show();
+                                    loadingDialog.dismissDialog();
+                                }
                             }
                         }
                     });
