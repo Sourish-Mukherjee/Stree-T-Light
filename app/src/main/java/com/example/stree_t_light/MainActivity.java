@@ -12,18 +12,16 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE =101;
-    public void help_Function(View view)
-    {
-        Toast.makeText(getApplicationContext(),"Loading!!",Toast.LENGTH_LONG).show();
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
-        {
+    private static final int REQUEST_CODE = 101;
 
-            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
-        }
+    public void help_Function(View view) {
+        Toast.makeText(getApplicationContext(), "Loading!!", Toast.LENGTH_LONG).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         else
-            startActivity(new Intent(this,MapsActivity.class));
+            startActivity(new Intent(this, MapsActivity.class));
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

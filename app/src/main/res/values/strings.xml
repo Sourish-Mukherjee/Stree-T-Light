@@ -3,4 +3,6 @@
     <string name="help">HELP!</string>
     <string name="PoliceStation">Nearest Police Station</string>
     <string name="title_activity_maps">Map</string>
+    <string name="currlocation">Current Location</string>
+    <string name="create_account">Create Account</string>
 </resources>
