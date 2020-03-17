@@ -7,8 +7,8 @@ android {
         applicationId "com.example.stree_t_light"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 5
-        versionName "1.1"
+        versionCode 6
+        versionName "1.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,4 +34,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
+apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'

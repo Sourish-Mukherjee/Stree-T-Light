@@ -3,9 +3,8 @@ package com.example.stree_t_light;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,8 +13,12 @@ import java.util.List;
 public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private String googlePlacesData;
+    public static String name = "";
+    static int minDist = Integer.MAX_VALUE;
+    public static String dist = "5";
     private GoogleMap mMap;
     private String url;
+    private MapsActivity mapsActivity = new MapsActivity();
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -43,19 +46,19 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList) {
         for (int i = 0; i < nearbyPlaceList.size(); i++) {
-            MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
             String placeName = googlePlace.get("place_name");
-            String vicinity = googlePlace.get("vicinity");
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
-            LatLng latLng = new LatLng(lat, lng);
-            markerOptions.position(latLng);
-            markerOptions.title(placeName + " : " + vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            mMap.addMarker(markerOptions);
-            //.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            GetDirectionsData getDirectionsData = new GetDirectionsData(placeName);
+            Object dt[] = new Object[3];
+            dt[0]=mMap;
+            dt[1]=mapsActivity.getUUURRLL(String.valueOf(lat),String.valueOf(lng));
+            dt[2]=new LatLng(lat,lng);
+            getDirectionsData.execute(dt);
+            if(Integer.valueOf(dist)<minDist)
+                minDist=Integer.valueOf(dist);
         }
+
     }
 }

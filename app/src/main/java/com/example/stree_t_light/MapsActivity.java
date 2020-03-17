@@ -32,10 +32,20 @@ import java.util.Locale;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private TextView currlocationtV;
+    TextView currlocationtV;
     int PROXIMITY_RADIUS = 10000;
+
+    public String getUUURRLL(String endlat,String endlong) {
+        StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        googleDirectionsUrl.append("origin="+12.9675+","+77.7141);
+        googleDirectionsUrl.append("&destination="+endlat+","+endlong);
+        googleDirectionsUrl.append("&key="+"AIzaSyBMoWc6AjidjeA7BzdFcOQR_vc2tgXrajA");
+        return googleDirectionsUrl.toString();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    // Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.map);
                     mapFragment.getMapAsync(MapsActivity.this);
@@ -69,6 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         String police = "police";
         String url = getUrl(currentLocation.getLatitude(), currentLocation.getLongitude(), police);
+        Object dt[] = new Object[3];
         Object dataTransfer[] = new Object[2];
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
@@ -102,8 +112,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googlePlaceUrl.append("location=" + latitutde + "," + longitutde);
         googlePlaceUrl.append("&radius=" + 3000);
         googlePlaceUrl.append("&types=" + "police");
-        googlePlaceUrl.append("&key=" + "AIzaSyAVrN518B3uBO72_SvBq8yhKmdyi2r-DoI");
+        googlePlaceUrl.append("&key=" + "AIzaSyBMoWc6AjidjeA7BzdFcOQR_vc2tgXrajA");
         return googlePlaceUrl.toString();
 
     }
+
 }

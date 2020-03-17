@@ -1,5 +1,7 @@
 package com.example.stree_t_light;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,11 +13,9 @@ import java.util.List;
 public class DataParser {
 
 
-    private String name = "";
     private HashMap<String, String> getPlace(JSONObject googlePlaceJson) {
         HashMap<String, String> googlePlacesMap = new HashMap<>();
-        String placeName = "-NA-";
-        String vicinity = "-NA-";
+        String placeName = "-NA-";;
         String latitude = "";
         String longitute = "";
         String reference = "";
@@ -23,13 +23,10 @@ public class DataParser {
             if (!googlePlaceJson.isNull("name")) {
                 placeName = googlePlaceJson.getString("name");
             }
-            if (!googlePlaceJson.isNull("vicinity"))
-                vicinity = googlePlaceJson.getString("vicinity");
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitute = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
             reference = googlePlaceJson.getString("reference");
             googlePlacesMap.put("place_name", placeName);
-            googlePlacesMap.put("vicinty", vicinity);
             googlePlacesMap.put("lat", latitude);
             googlePlacesMap.put("lng", longitute);
             googlePlacesMap.put("reference", reference);
@@ -67,5 +64,34 @@ public class DataParser {
         return getPlaces(jsonArray);
     }
 
+    public  HashMap<String,String> parseDirections(String jsonData)
+    {
+        JSONArray jsonArray = null;
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonData);
+            jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return getDuration(jsonArray);
+    }
+
+    private HashMap<String, String> getDuration(JSONArray googleDirectionsJson) {
+
+        HashMap<String,String> googleDirectionsMap = new HashMap<>();
+        String duration = "";
+        String distance = "";
+        try {
+            duration = googleDirectionsJson.getJSONObject(0).getJSONObject("duration").getString("text");
+            distance = googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
+            googleDirectionsMap.put("duration",duration);
+            googleDirectionsMap.put("distance",distance);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return googleDirectionsMap;
+    }
 
 }
